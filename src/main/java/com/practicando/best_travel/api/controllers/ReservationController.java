@@ -1,0 +1,48 @@
+package com.practicando.best_travel.api.controllers;
+
+import com.practicando.best_travel.api.models.request.ReservationRequest;
+import com.practicando.best_travel.api.models.responses.ReservationResponse;
+import com.practicando.best_travel.infrastructure.abstract_services.IReservationService;
+import jakarta.websocket.server.PathParam;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Map;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/reservations")
+@AllArgsConstructor
+public class ReservationController {
+
+    private final IReservationService reservationService;
+
+    @PostMapping
+    public ResponseEntity<ReservationResponse> post(@RequestBody ReservationRequest request){
+        return ResponseEntity.ok(reservationService.create(request));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservationResponse> get(@PathParam("id") UUID id){
+        return ResponseEntity.ok(reservationService.read(id));
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<ReservationResponse> put(@PathVariable UUID id, @RequestBody ReservationRequest request){
+        return ResponseEntity.ok(reservationService.update(request, id));
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id){
+        this.reservationService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, BigDecimal>> getFlyPrice(@RequestParam Long hotelId){
+        return ResponseEntity.ok(Collections.singletonMap("hotelPrice", reservationService.findPrice(hotelId)));
+    }
+}

@@ -1,0 +1,66 @@
+## Domain
+
+Todos los datos de los que seamos dueños (reglas del negocio)
+- Interfaces
+- Entidades
+
+## Infrastructure
+
+Toda la capa de servicios, capa DAO/Repository/Colas de mensajerias/Cliente HTTP
+- Servicios
+- Implementaciones
+
+## Api
+
+Modelos de controladores y donde va estar todos los enpoints
+- Controllers
+- Controller Advice
+
+## Util
+
+Utiliría que se usa en varias paquetes
+
+## --- Spring JPA ---
+
+- Ya implementa por defecto la intefaz Serializable en las entidades, lo cual
+  nos sirve para convertir a bytes los datos de la entidad para transmitirlos por
+  http, o hacia la base de datos.
+
+- Se puede generar ID's desde el backend o desde la base de datos (UUID)
+
+## Java EE vs Jakarta
+
+- Jakarta es la nueva version de Java EE, en ella se encuentran varias cosas utiles
+  como la especifiacion de JPA (Jakarta Persistence API)
+
+## Annotation @Repository
+
+- No hace falta colocar la annotation, porque Spring se da cuenta si es un repository de Spring
+  y lo carga automaticamente al Context
+
+## -- Relaciones --
+
+- Hay dos tipos de fetch mas usados, Eager y Lazy. El primero al traer los datos de la entidad
+  hace un join con su otra relacion asociada, lo cual trae todos los datos asosciados. En cambio,
+  el Lazy trae solo bajo demanda estos datos.
+
+- Al usar el metodo delete de JPA con la implementacion de Hibernate, vemos que tenemos un problema
+  no se estan borrando las relaciones (es decir, las otras entidades) por lo cual para resolver el
+  problema debemos colocar el tipo de fetch EAGER a LAZY. (clase 42)
+
+## -- Logging --
+
+- Se puede usar @Sjfl directamente lo que genera una instancia de Logging para evitar instanciarlo
+  a mano dentro de la clase.
+
+## -- Entidades --
+
+- Existen tipos de annotations que nos ayudan a manejar el ciclo de vida:
+    @PreRemove --> Ejecuta el metodo antes de eliminar la entidad de la base de datos
+    @PreUpdate --> Ejecuta el metodo antes de actualizar la entidad en la base de datos
+    @PrePersist ---> Ejecuta el metodo antes de persistir en la entidad en la base de datos
+
+  Se ejecuta en un metodo que debe ser void y sin parametros. (Solo puede haber 1 de c/a en la entidad)
+
+- Hay que colocar en las relaciones fetch = FetchType.LAZY ya que sino no se borra correctamente las
+  relaciones.
