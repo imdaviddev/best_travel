@@ -67,10 +67,10 @@ public class ReservationService implements IReservationService {
 
         reservationToUpdate.setHotel(hotel);
         reservationToUpdate.setTotalDays(request.getTotalDays());
-        reservationToUpdate.setPrice(hotel.getPrice().add(hotel.getPrice().multiply(charges_price_percentage)));
         reservationToUpdate.setDateTimeReservation(LocalDateTime.now());
         reservationToUpdate.setDateStart(LocalDate.now());
         reservationToUpdate.setDateEnd(LocalDate.now().plusDays(totalDays));
+        reservationToUpdate.setPrice(hotel.getPrice().add(hotel.getPrice().multiply(charges_price_percentage)));
 
         var reservationUpdated = this.reservationRepository.save(reservationToUpdate);
 
