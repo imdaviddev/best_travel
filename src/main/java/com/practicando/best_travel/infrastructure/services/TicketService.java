@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -93,8 +92,8 @@ public class TicketService implements ITicketService {
         return response;
     }
 
-    private static final BigDecimal charger_price_percentage = BigDecimal.valueOf(0.25);
-    private BigDecimal priceFly(FlyEntity fly){
+    public static final BigDecimal charger_price_percentage = BigDecimal.valueOf(0.25);
+    public BigDecimal priceFly(FlyEntity fly){
         return fly.getPrice().add(fly.getPrice().multiply(charger_price_percentage));
     }
 }
