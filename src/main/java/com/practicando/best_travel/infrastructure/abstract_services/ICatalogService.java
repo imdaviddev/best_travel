@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface ICatalogService<R> {
 
-    Page<R> readAll(Integer page, Integer size, SortType type);
+    Page<R> readAll(Integer page, Integer size, SortType sortType);
     Set<R> readLessPrice(BigDecimal price);
     Set<R> readBetweenPrices(BigDecimal min, BigDecimal max);
 
