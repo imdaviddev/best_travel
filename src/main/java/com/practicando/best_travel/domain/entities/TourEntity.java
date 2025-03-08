@@ -39,31 +39,22 @@ public class TourEntity {
     @JoinColumn(name = "id_customer")
     CustomerEntity customer;
 
-    public void addTicker(TicketEntity ticket){
-        if(Objects.isNull(this.tickets)) this.tickets = new HashSet<>();
-        this.tickets.add(ticket);
+    @PrePersist
+    @PreRemove
+    public void updateFk(){
+        this.tickets.forEach(ticket -> ticket.setTour(this));
+        this.reservations.forEach(reservation -> reservation.setTour(this));
     }
 
     public void removeTicket(UUID id){
+        this.tickets.stream()
+                .filter(t -> t.getId().equals(id))
+                .forEach(t -> t.setTour(null));
+    }
+
+    public void addTicket(TicketEntity ticket){
         if(Objects.isNull(this.tickets)) this.tickets = new HashSet<>();
-        this.tickets.removeIf(ticket -> ticket.getId().equals(id));
-    }
-
-    public void updateTickets(){
-        this.tickets.forEach(ticket -> ticket.setTour(this));
-    }
-
-    public void addReservation(ReservationEntity reservation){
-        if(Objects.isNull(this.reservations)) this.reservations = new HashSet<>();
-        this.reservations.add(reservation);
-    }
-
-    public void removeReservation(UUID id){
-        if(Objects.isNull(this.reservations)) this.reservations = new HashSet<>();
-        this.reservations.removeIf(reservartion -> reservartion.getId().equals(id));
-    }
-
-    public void updateReservation(){
-        this.reservations.forEach(reservation -> reservation.setTour(this));
+        this.tickets.add(ticket);
+        this.tickets.forEach(t -> t.setTour(this));
     }
 }

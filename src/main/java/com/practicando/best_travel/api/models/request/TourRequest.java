@@ -13,7 +13,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TourRequest implements Serializable {
 
-    Serializable customerId;
+    String customerId;
     Set<TourFlyRequest> flights;
     Set<TourHotelRequest> hotels;
 }

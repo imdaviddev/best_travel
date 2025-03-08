@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.practicando.best_travel.infrastructure.services.ReservationService.charges_price_percentage;
+import static com.practicando.best_travel.infrastructure.services.TicketService.charger_price_percentage;
 
 @Component
 @Transactional
@@ -28,14 +29,14 @@ public class TourHelper {
     private final TicketRepository ticketRepository;
     private final ReservationRepository reservationRepository;
 
-    private Set<TicketEntity> createTickets(Set<FlyEntity> flights, CustomerEntity customer){
+    public Set<TicketEntity> createTickets(Set<FlyEntity> flights, CustomerEntity customer){
         var response = new HashSet<TicketEntity>();
         flights.forEach((fly -> {
             var ticketToPersist = TicketEntity.builder()
                     .id(UUID.randomUUID())
                     .fly(fly)
                     .customer(customer)
-                    .price(fly.getPrice().add(fly.getPrice().multiply(TicketService.charger_price_percentage)))
+                    .price(fly.getPrice().add(fly.getPrice().multiply(charger_price_percentage)))
                     .purchaseDate(LocalDate.now())
                     .arrivalDate(BestTravelUtil.getRandomSoon())
                     .departureDate(BestTravelUtil.getRandomLatter())
@@ -45,7 +46,7 @@ public class TourHelper {
         return response;
     }
 
-    private Set<ReservationEntity> createReservation(Map<HotelEntity, Integer> hotels, CustomerEntity customer){
+    public Set<ReservationEntity> createReservation(Map<HotelEntity, Integer> hotels, CustomerEntity customer){
         var response = new HashSet<ReservationEntity>();
         hotels.forEach(((hotel, totalDays) -> {
             var reservationToPersist = ReservationEntity.builder()
@@ -62,5 +63,19 @@ public class TourHelper {
         }));
 
         return response;
+    }
+
+    public TicketEntity createTicket(FlyEntity fly, CustomerEntity customer){
+        var ticketToPersist = TicketEntity.builder()
+                .id(UUID.randomUUID())
+                .fly(fly)
+                .customer(customer)
+                .price(fly.getPrice().add(fly.getPrice().multiply(charger_price_percentage)))
+                .purchaseDate(LocalDate.now())
+                .arrivalDate(BestTravelUtil.getRandomSoon())
+                .departureDate(BestTravelUtil.getRandomLatter())
+                .build();
+
+        return this.ticketRepository.save(ticketToPersist);
     }
 }
